@@ -18,7 +18,6 @@ class App extends PureComponent {
 
   render() {
     const { images, fetchingImagesData, bearthDayCheck } = this.props;
-    const { dateEntered } = this.state;
     const sliderSettings = {
       speed: 500,
       slidesToShow: 1,
