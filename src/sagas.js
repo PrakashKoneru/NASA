@@ -1,4 +1,4 @@
-import { takeEvery, all, call, put } from 'redux-saga/effects'
+import { takeLatest, all, call, put } from 'redux-saga/effects'
 import { fetchImages, updateImagesData } from './actions.types';
 import axios from 'axios';
 import moment from 'moment';
@@ -7,7 +7,11 @@ const submitDate = (date) => axios.get(`https://epic.gsfc.nasa.gov/api/enhanced/
 
 function* fetchImagesData({ type, payload }) {
   try {
-    let closestBirthDate = payload;
+    const currentYear = moment().year();
+    const currentTime =  moment().valueOf();
+    const dateVal = payload.slice(4);
+    const currentBdayTime = moment(`${currentYear}${dateVal}`).valueOf();
+    let closestBirthDate = currentTime - currentBdayTime >= 0 ? `${currentYear}${dateVal}` : `${currentYear - 1}${dateVal}`;
     while (true) {
       const { data } = yield call(submitDate, moment(closestBirthDate).format('YYYY-MM-DD'));
       if (data.length > 0) {
@@ -24,6 +28,6 @@ function* fetchImagesData({ type, payload }) {
 
 export default function* rootSaga() {
   yield all([
-    takeEvery(fetchImages, fetchImagesData)
+    takeLatest(fetchImages, fetchImagesData)
   ])
 }
