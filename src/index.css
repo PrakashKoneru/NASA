@@ -19,3 +19,7 @@ code {
   background: #000000;
   color: white;
 }
+
+.textCenter {
+  text-align: center;
+}

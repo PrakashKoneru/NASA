@@ -17,7 +17,8 @@ class App extends PureComponent {
   fetchData = () => this.props.fetchImagesAction(this.state.dateEntered)
 
   render() {
-    const { images } = this.props;
+    const { images, fetchingImagesData, bearthDayCheck } = this.props;
+    const { dateEntered } = this.state;
     const sliderSettings = {
       speed: 500,
       slidesToShow: 1,
@@ -27,7 +28,10 @@ class App extends PureComponent {
 
     return (
       <div>
-        <div className="sliderContainer">
+        <div className='sliderContainer'>
+          <div className='textCenter'>
+            { bearthDayCheck }
+          </div>
           <Slider {...sliderSettings}>
             {images && images.map((image) => {
               const imageTakenOn = moment(image.date).format('YYYY/MM/DD');
@@ -46,13 +50,16 @@ class App extends PureComponent {
         </div>
         <input type="date" onChange={this.inputChange}/>
         <button onClick={this.fetchData}>Get Picture</button>
+        {fetchingImagesData && (<div className='textCenter'>Loading...</div>)}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  images: state.images
+  images: state.images,
+  fetchingImagesData: state.fetchingImagesData,
+  bearthDayCheck: state.bearthDayCheck
 })
 
 export default connect(mapStateToProps, { fetchImagesAction })(App);
